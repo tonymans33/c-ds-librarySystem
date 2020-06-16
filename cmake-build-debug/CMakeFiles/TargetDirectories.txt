@@ -1,0 +1,3 @@
+D:/Studying/Year 2/Second term/DS/Final/Project/Part1.1/books_library_system/cmake-build-debug/CMakeFiles/books.dir
+D:/Studying/Year 2/Second term/DS/Final/Project/Part1.1/books_library_system/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Studying/Year 2/Second term/DS/Final/Project/Part1.1/books_library_system/cmake-build-debug/CMakeFiles/rebuild_cache.dir

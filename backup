@@ -1,0 +1,346 @@
+#include <iostream>
+
+using namespace std;
+
+struct book
+{
+    string bookName;
+    int bookISBN;
+    int numOfCopies;
+    book *prCopies;
+    book *next;
+
+};
+struct bookCopy
+{
+    string copyDate;
+    string borrowed;
+    string borrower;
+    string borrowDate;
+    int numOfDays ;
+    bookCopy *next;
+};
+
+class library
+{
+    book *head;
+    book *tail;
+    int bookLength;
+    bookCopy *front;
+    bookCopy *rear;
+    int bookCopyLength;
+public:
+    library()
+    {
+        head = tail = NULL;
+        front = rear = NULL;
+        bookLength = bookCopyLength =  0;
+    }
+
+    /*void insertBookFromFirst(string name, int ISBN , int n)
+    {
+        book* newBook = new book;
+        newBook->bookName = name;
+        newBook->bookISBN = ISBN;
+        newBook->numOfCopies = n;
+        if(bookLength == 0)
+        {
+            head = tail = newBook;
+            newBook->next = NULL;
+        }
+        else
+        {
+            newBook->next = head;
+            head = newBook;
+        }
+        bookLength++;
+    }*/ //insertHead
+
+    /*void insertBookFromLast(string name, int ISBN , int n)
+    {
+        book* newBook = new book;
+        newBook->bookName = name;
+        newBook->bookISBN = ISBN;
+        newBook->numOfCopies = n;
+        if(bookLength == 0)
+        {
+            head = tail = newBook;
+            newBook->next = NULL;
+        }
+        else
+        {
+            tail->next = newBook;
+            newBook->next = NULL;
+            tail = newBook;
+        }
+        bookLength++;
+    }*/ //insertTail
+
+    void addBook (string name, int ISBN , int n)
+    {
+        if(bookLength == 0)
+        {
+            book* newBook = new book;
+            newBook->bookName = name;
+            newBook->bookISBN = ISBN;
+            newBook->numOfCopies = n;
+            head = tail = newBook;
+            newBook->next = NULL;
+            bookLength++;
+        }
+        else
+        {
+            book* newBook = new book;
+            newBook->bookName = name;
+            newBook->bookISBN = ISBN;
+            newBook->numOfCopies = n;
+            tail->next = newBook;
+            newBook->next = NULL;
+            tail = newBook;
+            bookLength++;
+        }
+
+    }
+
+    void search(int ISBN)
+    {
+        book *current = head;
+        int position = 0;
+        int found = 0;
+        while(current != NULL)
+        {
+            if(current->bookISBN == ISBN)
+            {
+                /*if(current->borrowed)
+                {
+                    cout<<"Book : "<<name<<" is available but borrowed in this moment "<<endl;
+                    found = 1;
+                }
+                else
+                {*/
+                    cout<<"Book : "<<current->bookName<<" is available in this moment "<<endl;
+                    found = 1;
+               // }
+            }
+            current = current->next;
+            if(found == 0)
+            {
+                cout<<"Book : "<<current->bookName<<" is not available in this moment "<<endl;
+            }
+        }
+    }
+    void addCopy(string copyDate , string borrowed , string borrower, string borrowDate , int numOfDays , int bookISBN)
+    {
+
+        if(bookCopyLength == 0)
+        {
+            front = new bookCopy;
+            front->copyDate = copyDate;
+            front->borrowed = borrowed;
+            front->borrower = borrower;
+            front->borrowDate = borrowDate;
+            front->numOfDays = numOfDays;
+            front->next = NULL;
+            rear = front;
+            bookCopyLength++;
+            book *current = head;
+            while (current != NULL)
+            {
+                if(current->bookISBN == bookISBN)
+                {
+                    current->prCopies = reinterpret_cast<book *>(front);
+                    break;
+                }
+            }
+
+
+        }
+        else
+        {
+            bookCopy *newCopy = new bookCopy;
+            newCopy->copyDate = copyDate;
+            newCopy->borrowed = borrowed;
+            newCopy->borrower = borrower;
+            newCopy->borrowDate = borrowDate;
+            newCopy->numOfDays = numOfDays;
+            rear->next = newCopy;
+            rear = newCopy;
+            bookCopyLength++;
+            book *current = head;
+            while (current != NULL)
+            {
+                if(current->bookISBN == bookISBN)
+                {
+                    current->prCopies = reinterpret_cast<book *>(newCopy);
+                    break;
+                }
+
+            }
+        }
+
+    }
+
+    void displayBooks()
+    {
+        book *current = head;
+        while (current != NULL)
+        {
+            cout<<current->bookName<<" "<<current->bookISBN<<" "<<current->numOfCopies<<" "<<endl;
+
+            current = current->next;
+        }
+        cout<<endl;
+
+    }
+
+    void displayCopies()
+    {
+        book *current = head;
+        while (current != NULL)
+        {
+            cout<<current->prCopies->copyDate<<" "<<current->borrowed<<" "<<current->borrower<<" "<<current->borrowDate<<" "<<current->numOfDays<<" "<<endl;
+        }
+        cout<<endl;
+
+    }
+
+};
+
+int main()
+{
+    cout<<"*******Welcome to Library Management System******* "<<endl;
+    cout<<"Main Menu : "<<endl;
+    cout<<"Choose one from below : "<<endl;
+    library l;
+    int choice;
+    char again;
+    main:
+    {
+        cout<<" 1- Add a new book \n 2- Add a book copy \n 3- Borrow a book \n 4- Return a book \n 5- Show borrow statistics \n 6- Library inventory \n 7- Search about book "<<endl;
+        cin>>choice;
+        if(choice == 1)
+        {
+            string bookName ;
+            int numOfCopies , bookISBN ;
+            cout<<"Enter the name of the book "<<endl;
+            cin>>bookName;
+            cout<<"Enter the ISBN of the book "<<endl;
+            cin>>bookISBN;
+            cout<<"Enter number of copies of the book "<<endl;
+            cin>>numOfCopies;
+            l.addBook(bookName, bookISBN, numOfCopies);
+            cout<<"You have successfully added a new book "<<endl;
+            cout<<"Press 'b' to back to the main menu"<<endl;
+            cin>>again;
+            if(again == 'b')
+            {
+                goto main;
+            }
+
+        }
+        else if(choice == 2)
+        {
+            string copyDate , borrowed , borrower , borrowDate;
+            int bookISBN , numOfDays;
+            cout<<"Enter the ISBN of the book "<<endl;
+            cin>>bookISBN;
+            cout<<"Enter the copy date of the book "<<endl;
+            cin>>copyDate;
+            cout<<"Enter witch the book is 'available' or 'borrowed' "<<endl;
+            cin>>borrowed;
+            cout<<"Enter the borrower of the book "<<endl;
+            cin>>borrower;
+            cout<<"Enter the borrowDta of the book "<<endl;
+            cin>>borrowDate;
+            cout<<"Enter the number of days to return the book  "<<endl;
+            cin>>numOfDays;
+            l.addCopy(copyDate , borrowed , borrower , borrowDate ,numOfDays, bookISBN);
+            cout<<"You have successfully added a new copy "<<endl;
+            cout<<"Press 'b' to back to the main menu"<<endl;
+            cin>>again;
+            if(again == 'b')
+            {
+                goto main;
+            }
+        }
+        else if(choice == 3)
+        {
+            string borrower;
+            bool check;
+            int bookISBN;
+            cout<<"Enter borrower name "<<endl;
+            cin>>borrower;
+            cout<<"Enter the ISBN of the book "<<endl;
+            cin>>bookISBN;
+            //check = l.checkIfAvailable(bookISBN); //////////////
+            if(check)
+            {
+                //l.borrowBook(bookISBN , borrower); //////////////////////
+                cout<<"Press 'b' to back to the main menu"<<endl;
+                cin>>again;
+                if(again == 'b')
+                {
+                    goto main;
+                }
+            }
+            else
+            {
+                cout<<"There isn't any available copies of this book in this moment"<<endl;
+                cout<<"Press 'b' to back to the main menu"<<endl;
+                cin>>again;
+                if(again == 'b')
+                {
+                    goto main;
+                }
+            }
+
+        }
+        else if(choice == 4)
+        {
+            string borrower;
+            int bookISBN;
+            cout<<"Enter your name "<<endl;
+            cin>>borrower;
+            cout<<"Enter the ISBN of the book "<<endl;
+            cin>>bookISBN;
+            //l.returnBook(borrower , bookISBN); ///////////
+            cout<<"Press 'b' to back to the main menu"<<endl;
+            cin>>again;
+            if(again == 'b')
+            {
+                goto main;
+            }
+        }
+        else if(choice == 5)
+        {
+
+
+
+        }
+        else if(choice == 6)
+        {
+            l.displayBooks();
+
+        }
+        else if(choice == 7)
+        {
+            int bookISBN ;
+            cout<<"Enter the ISBN of the book "<<endl;
+            cin>>bookISBN;
+            l.search(bookISBN);
+            cout<<"Press 'b' to back to the main menu"<<endl;
+            cin>>again;
+            if(again == 'b')
+            {
+                goto main;
+            }
+        }
+        else
+        {
+            cout<<"Invalid input .. Please try again !"<<endl;
+            goto main;
+        }
+    }
+
+    return 0;
+}
